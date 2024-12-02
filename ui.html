@@ -1,0 +1,102 @@
+<!-- Adding external UI library -->
+
+<!-- github link: https://github.com/thomas-lowry/figma-plugin-ds -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thomas-lowry/figma-plugin-ds/dist/figma-plugin-ds.css">
+
+<!-- Adding styles -->
+
+<style>
+
+  body {
+    padding: 2em;
+    }
+  
+  div{
+    margin-bottom: 0.5em;
+    }
+
+  input {
+    display: block;
+    margin-bottom: 1em;
+    }
+
+  .action-area{
+    margin-top: 1em;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+  }
+
+  .textarea{
+    align-items: top;
+  }
+
+  .row1 {
+    display: flex;
+    gap: 20px;
+  }
+
+  .row1 div {
+    flex-grow: 1;
+  }
+
+  .row1 div:first-child{
+    max-width: 40px;
+  }
+
+</style>
+
+<!-- Main content -->
+
+<img src="https://financesonline.com/uploads/2019/11/VelocityEHS-logo1.png" alt="VelocityEHS Logo" width="200">
+
+<div class="input row1">
+  <div>
+    <label for="index">#</label>
+    <input type="input" id="index" class="input__field" value=1>
+  </div>
+  <div>
+    <label for="title">Title (Required)</label>
+    <input type="input" id="title" class="input__field" placeholder="Enter a title">
+  </div>
+</div> 
+<div class="input">
+  <label for="description">Annotation</label>
+  <textarea id="description" class="textarea" rows="3"></textarea>
+</div>
+
+<!-- Action Area -->
+<div class="action-area">
+  <button class="button button--disabled" id="annotate">Annotate</button>
+  <button class="button button--secondary" id="cancel">Cancel</button>
+</div>
+
+<!-- Logic -->
+<script>
+
+const title = document.getElementById("title");
+const annotateBtn = document.getElementById("annotate");
+const cancelBtn = document.getElementById("cancel");
+
+// Enables "Annotate" button if not empty
+title.onkeypress = () => {
+  title.value !="" ? annotateBtn.classList.add("button--primary") : annotateBtn.classList.remove("button--primary");
+}
+
+annotateBtn.onclick = () => {
+  const index = document.getElementById("index").value;
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  
+  parent.postMessage({pluginMessage: {index, title, description}}, "*");
+  document.getElementById("index").value = parseInt(index) + 1;
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+}
+
+cancelBtn.onclick = () => {
+  parent.postMessage({pluginMessage: "closePlugin"}, "*");
+}
+
+</script>
